@@ -3,9 +3,9 @@ import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import HomeScreen from '../screens/HomeScreen/HomeScreen';
-import TaskScreen from '../screens/TaskScreen/Task';
-import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
+import HomeScreen from '../screens/HomeScreen';
+import TaskScreen from '../Task/Task';
+import ProfileScreen from '../screens/ProfileScreen';
 import {FontAwesome} from 'react-native-vector-icons'
 
 const Tab = createBottomTabNavigator();

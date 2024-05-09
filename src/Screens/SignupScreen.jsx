@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View , Image, TouchableOpacity, TextInput, ScrollView} from 'react-native'
 import React from 'react'
-import Colors from '../../Utils/Colors'
+import Colors from '../Utils/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Logo from './../../assets/logo.png'
-import {button1} from './../../common/button'
-import {head1,head2, form, label, input} from './../../common/Form'
+import {button1} from '../components/button'
+import {head1,head2, form, label, input} from '../components/Layout/Form'
 const SignUp = ({navigation}) => {
   return (
     // <SafeAreaView>

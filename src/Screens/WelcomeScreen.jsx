@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View , Image, TouchableOpacity} from 'react-native'
 import React from 'react'
-import Colors from '../../Utils/Colors'
+import Colors from '../Utils/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Logo from './../../assets/logo.png'
-import {button1, button} from './../../common/button'
+import {button1, button} from '../components/button'
 const WelcomeScreen = ({navigation}) => {
   return (
     <SafeAreaView>

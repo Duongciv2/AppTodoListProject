@@ -8,8 +8,8 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import Colors from "./../../Utils/Colors";
-import React, { useEffect, useState } from "react";
+import Colors from "../Utils/Colors";
+import React, { useEffect, useState, useContext } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { ModalPortal } from "react-native-modals";
 import { BottomModal } from "react-native-modals";
@@ -17,16 +17,19 @@ import { ModalTitle, ModalContent } from "react-native-modals";
 import { SlideAnimation } from "react-native-modals";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
-import localhost from "../../Utils/LocalHost";
+import localhost from "../Utils/LocalHost";
 import moment from "moment";
 import { Entypo, FontAwesome, Feather } from "@expo/vector-icons";
 //import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import Home from "../../Navigation/TabNavigation";
 // import {useRouter} from 'expo-router'
 
-const index = () => {
+//Test
+// import { useSelector } from "react-redux";
+//
+
+const index= ({ selectedDate }) => {
   const navigation = useNavigation();
   const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState("");
@@ -36,6 +39,13 @@ const index = () => {
   const [completedTodos, setCompletedTodos] = useState([]);
   const [marked, setMarked] = useState(false);
   const today = moment().format("MMM Do");
+  
+
+  const formattedDate = selectedDate.format('YYYY-MM-DD');
+
+  // const selectedDate = useSelector(state => state.selectedDate);
+
+  console.log(formattedDate)
 
   const suggestions = [
     { id: "0", todo: "Water" },
@@ -43,7 +53,7 @@ const index = () => {
     { id: "2", todo: "Go to bed" },
     { id: "3", todo: "Take medicine" },
     { id: "4", todo: "Go Shopping" },
-    { id: "5", todo: "finish assignments" },
+    { id: "5", todo:  formattedDate},
   ];
 
   //add Todo len mongo
@@ -52,11 +62,12 @@ const index = () => {
       const todoData = {
         title: todo,
         category: category,
+        dueDate: selectedDate.format('YYYY-MM-DD')
       };
 
       axios
         .post(
-          `http://${localhost.localhost}:3000/todos/6621e243b3aa8d1281a160d1`,
+          `http://${localhost.localhost}:3000/todos/6621e243b3aa8d1281a160d1/${formattedDate}`,
           todoData
         )
         .then((response) => {
@@ -76,13 +87,12 @@ const index = () => {
 
   useEffect(() => {
     getUserTodos();
-  }, [marked, isModalVisible]);
+  }, [marked, isModalVisible, formattedDate]);
   const getUserTodos = async () => {
     try {
       const response = await axios.get(
-        `http://${localhost.localhost}:3000/users/6621e243b3aa8d1281a160d1/todos`
+        `http://${localhost.localhost}:3000/users/6621e243b3aa8d1281a160d1/todos/${formattedDate}`
       );
-
       console.log(response.data.todos);
       setTodos(response.data.todos);
 
@@ -94,22 +104,26 @@ const index = () => {
       const completed = fetchedTodos.filter(
         (todo) => todo.status === "completed"
       );
-
+      
       setPendingTodos(pending);
       setCompletedTodos(completed);
+      
     } catch (error) {
       console.log("error", error);
     }
   };
+  
 
   //Mask
   const markTodoAsCompleted = async (todoId) => {
     try {
       setMarked(true);
       const response = await axios.patch(
-        `http://${localhost.localhost}:3000/todos/${todoId}/complete`
+        `http://${localhost.localhost}:3000/todos/${todoId}/complete/${formattedDate}`
       );
       console.log(response.data);
+
+      await getUserTodos();
     } catch (error) {
       console.log("error", error);
     }
@@ -119,7 +133,12 @@ const index = () => {
 
   const yourPicture = require("./../../assets/start.png");
   return (
+    
     <>
+{/* Test*/}
+
+
+{/* // */}
       <View style={styles.pressableList}>
         <Pressable style={styles.pressable}>
           <Text style={{ color: "white", textAlign: "center" }}>All</Text>
@@ -150,7 +169,7 @@ const index = () => {
                 {pendingTodos?.map((item, index) => (
                   <Pressable
                     onPress={() => {
-                      navigation.navigate("Home", {
+                      navigation.navigate("HomeScreen", {
                         id: item._id,
                         title: item?.title,
                         category: item?.category,
@@ -349,7 +368,9 @@ const index = () => {
               <Text>Work</Text>
             </Pressable>
             <Pressable
-              onPress={() => setCategory("Person")}
+              onPress={() => {
+                setCategory("Person")}
+              }
               style={styles.pressAddTodo}
             >
               <Text>Person</Text>

@@ -1,7 +1,7 @@
 import { View, Text,StyleSheet, SafeAreaView} from 'react-native'
 import React from 'react'
-import Calendar from './Calendar'
-import Task from './Task'
+import Calendar from '../Calendars/Calendar'
+import Task from '../Task/Task'
 //import Footer from './Footer'
 export default function HomeScreen() {
   return (
