@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import moment, { RFC_2822 } from 'moment';
 import Swiper from 'react-native-swiper';
-import Colors from '../../Utils/Colors';
+import Colors from '../Utils/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const { width } = Dimensions.get('screen');

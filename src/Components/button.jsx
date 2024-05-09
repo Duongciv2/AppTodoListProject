@@ -1,4 +1,4 @@
-import Colors from './../Utils/Colors'
+import Colors from '../Utils/Colors'
 
 module.exports = {
   button: {
