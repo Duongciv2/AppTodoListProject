@@ -7,131 +7,107 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-} from "react-native";
-import Colors from "../Utils/Colors";
-import React, { useEffect, useState, useContext } from "react";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { ModalPortal } from "react-native-modals";
-import { BottomModal } from "react-native-modals";
-import { ModalTitle, ModalContent } from "react-native-modals";
-import { SlideAnimation } from "react-native-modals";
-import { AntDesign } from "@expo/vector-icons";
-import axios from "axios";
-import localhost from "../Utils/LocalHost";
-import moment from "moment";
-import { Entypo, FontAwesome, Feather } from "@expo/vector-icons";
-//import { MaterialIcons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-// import {useRouter} from 'expo-router'
+} from 'react-native';
+import Colors from '../Utils/Colors';
+import React, { useEffect, useState } from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ModalPortal } from 'react-native-modals';
+import { BottomModal } from 'react-native-modals';
+import { ModalTitle, ModalContent } from 'react-native-modals';
+import { SlideAnimation } from 'react-native-modals';
+import { AntDesign } from '@expo/vector-icons';
+import axios from 'axios';
+import moment from 'moment';
+import { Entypo, FontAwesome, Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { API_BASE_URL, DEFAULT_USER_ID } from '../Services/config';
 
-//Test
-// import { useSelector } from "react-redux";
-//
-
-const index= ({ selectedDate }) => {
+const index = ({ selectedDate }) => {
   const navigation = useNavigation();
   const [todos, setTodos] = useState([]);
-  const [todo, setTodo] = useState("");
+  const [todo, setTodo] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState('All');
   const [pendingTodos, setPendingTodos] = useState([]);
   const [completedTodos, setCompletedTodos] = useState([]);
   const [marked, setMarked] = useState(false);
-  const today = moment().format("MMM Do");
-  
+  const today = moment().format('MMM Do');
 
   const formattedDate = selectedDate.format('YYYY-MM-DD');
 
-  // const selectedDate = useSelector(state => state.selectedDate);
-
-  console.log(formattedDate)
-
   const suggestions = [
-    { id: "0", todo: "Water" },
-    { id: "1", todo: "Go Excercising" },
-    { id: "2", todo: "Go to bed" },
-    { id: "3", todo: "Take medicine" },
-    { id: "4", todo: "Go Shopping" },
-    { id: "5", todo:  formattedDate},
+    { id: '0', todo: 'Water' },
+    { id: '1', todo: 'Go Exercising' },
+    { id: '2', todo: 'Go to bed' },
+    { id: '3', todo: 'Take medicine' },
+    { id: '4', todo: 'Go Shopping' },
+    { id: '5', todo: formattedDate },
   ];
 
-  //add Todo len mongo
   const addTodo = async () => {
     try {
       const todoData = {
         title: todo,
         category: category,
-        dueDate: selectedDate.format('YYYY-MM-DD')
+        dueDate: selectedDate.format('YYYY-MM-DD'),
       };
 
       axios
-        .post(
-          `http://${localhost.localhost}:3000/todos/6621e243b3aa8d1281a160d1/${formattedDate}`,
-          todoData
-        )
+        .post(`${API_BASE_URL}/todos/${DEFAULT_USER_ID}/${formattedDate}`, todoData)
         .then((response) => {
           console.log(response);
         })
         .catch((error) => {
-          console.log("error", error);
+          console.log('error', error);
         });
 
       await getUserTodos();
       setModalVisible(false);
-      setTodo("");
+      setTodo('');
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
     }
   };
 
   useEffect(() => {
     getUserTodos();
   }, [marked, isModalVisible, formattedDate]);
+
   const getUserTodos = async () => {
     try {
-      const response = await axios.get(
-        `http://${localhost.localhost}:3000/users/6621e243b3aa8d1281a160d1/todos/${formattedDate}`
-      );
+      const response = await axios.get(`${API_BASE_URL}/users/${DEFAULT_USER_ID}/todos/${formattedDate}`);
       console.log(response.data.todos);
       setTodos(response.data.todos);
 
       const fetchedTodos = response.data.todos || [];
-      const pending = fetchedTodos.filter(
-        (todo) => todo.status !== "completed"
-      );
+      const pending = fetchedTodos.filter((todo) => todo.status !== 'completed');
+      const completed = fetchedTodos.filter((todo) => todo.status === 'completed');
 
-      const completed = fetchedTodos.filter(
-        (todo) => todo.status === "completed"
-      );
-      
       setPendingTodos(pending);
       setCompletedTodos(completed);
-      
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
     }
   };
-  
 
-  //Mask
   const markTodoAsCompleted = async (todoId) => {
     try {
       setMarked(true);
-      const response = await axios.patch(
-        `http://${localhost.localhost}:3000/todos/${todoId}/complete/${formattedDate}`
-      );
+      const response = await axios.patch(`${API_BASE_URL}/todos/${todoId}/complete/${formattedDate}`);
       console.log(response.data);
 
       await getUserTodos();
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
     }
   };
-  console.log("completed", completedTodos);
-  console.log("pending", pendingTodos);
 
-  const yourPicture = require("./../../assets/start.png");
+  console.log('completed', completedTodos);
+  console.log('pending', pendingTodos);
+
+  const yourPicture = require('./../../assets/start.png');
+
   return (
     
     <>

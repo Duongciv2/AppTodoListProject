@@ -3,8 +3,8 @@ import React from 'react'
 import Colors from '../Utils/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Logo from './../../assets/logo.png'
-import {button1} from '../components/button'
-import {head1,head2, form, label, input} from '../components/Layout/Form'
+import {button1} from '../Components/button'
+import {head1,head2, form, label, input} from '../Components/Layout/Form'
 const Login = ({navigation}) => {
   return (
     <SafeAreaView>

@@ -8,37 +8,41 @@ import {
   TextInput,
   Pressable,
   Alert,
-} from "react-native";
-import React, { useState } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
-import { AntDesign ,Ionicons} from "@expo/vector-icons";
-import Colors from "./../Utils/Colors";
-import Logo from "./../assets/logo.png"
-import axios from "axios";
-import User from "../../api/models/User";
-import localhost from './../Utils/LocalHost'
-const SignUp = ({navigation}) => {
-  const [name,setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+} from 'react-native';
+import React, { useState } from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import Colors from './../Utils/Colors';
+import Logo from './../assets/logo.png';
+import axios from 'axios';
+import { API_BASE_URL, SCREEN_NAMES } from '../Services/config'; // Import từ file config.js
+
+const SignUp = ({ navigation }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const handleRegister = () => {
     const user = {
       name: name,
       email: email,
-      password: password
-    }
+      password: password,
+    };
 
-    axios.post(`http://${localhost.localhost}:3000/register`,user).then((response) => {
-      console.log(response);
-            Alert.alert("Registration successfull","You have been registered succesfully");
-            setEmail("");
-            setPassword("");
-            setName("");
-        }).catch((error) => {
-            Alert.alert("Registration failed","an error ocurred during registration");
-            console.log("error",error)
-        })
-  }
+    axios
+      .post(`${API_BASE_URL}/register`, user)
+      .then((response) => {
+        console.log(response);
+        Alert.alert('Registration successful', 'You have been registered successfully');
+        setEmail('');
+        setPassword('');
+        setName('');
+      })
+      .catch((error) => {
+        Alert.alert('Registration failed', 'An error occurred during registration');
+        console.log('error', error);
+      });
+  };
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: Colors.LIGHTPRIMARY, alignItems: "center" }}
@@ -123,7 +127,7 @@ const SignUp = ({navigation}) => {
 
             <Text style={{ textAlign: "center", fontSize: 15, color: "gray", marginTop:15 }}>
              Already have an account? 
-             <Text onPress={() => navigation.navigate("Login")} style={{  color: Colors.LESSPRIMARY }}>Sign In</Text>
+             <Text onPress={() => navigation.navigate(SCREEN_NAMES.LOGIN_SCREEN)} style={{  color: Colors.LESSPRIMARY }}>Sign In</Text>
             </Text>
 
         </View>

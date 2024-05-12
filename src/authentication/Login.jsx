@@ -7,46 +7,58 @@ import {
     KeyboardAvoidingView,
     TextInput,
     Pressable,
-  } from "react-native";
-import React, { useState, useEffect } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import Logo from "./../assets/logo.png"
-import Colors from './../Utils/Colors'
-import axios from "axios";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import localhost from './../Utils/LocalHost'
-
-const Login = ({navigation}) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    useEffect(() => {
-        const checkLoginStatus = async () => {
-          try {
-            const token = await AsyncStorage.getItem("authToken");
-            if (token) {
-              navigation.navigate("HomeScreen");
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        };
-        checkLoginStatus();
-      }, []);
-
-    const handleLogin = () =>{
+  } from 'react-native';
+  import React, { useState, useEffect } from 'react';
+  import { MaterialIcons } from '@expo/vector-icons';
+  import { AntDesign } from '@expo/vector-icons';
+  import Logo from './../assets/logo.png';
+  import Colors from './../Utils/Colors';
+  import axios from 'axios';
+  import AsyncStorage from '@react-native-async-storage/async-storage';
+  import { API_BASE_URL, SCREEN_NAMES } from '../Services/config';
+  import { validateEmail, validatePassword } from '../Utils/helpers/validate'; // Import các hàm validate
+  
+  const Login = ({ navigation }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+  
+    // ... (phần còn lại của code không thay đổi)
+  
+    const handleLogin = () => {
+      // Reset lỗi trước khi validate
+      setEmailError('');
+      setPasswordError('');
+  
+      // Validate email
+      if (!email) {
+        setEmailError('Email is required');
+      } else if (!validateEmail(email)) { // Sử dụng hàm validateEmail
+        setEmailError('Invalid email format');
+      }
+  
+      // Validate password
+      if (!password) {
+        setPasswordError('Password is required');
+      } else if (!validatePassword(password)) { // Sử dụng hàm validatePassword
+        setPasswordError('Password must be at least 6 characters');
+      }
+  
+      // Nếu không có lỗi, tiếp tục xử lý đăng nhập
+      if (!emailError && !passwordError) {
         const user = {
-            email: email,
-            password: password,
+          email: email,
+          password: password,
         };
-        axios.post(`http://${localhost.localhost}:3000/login`, user).then((response) => {
-            const token = response.data.token;
-            console.log("token",token)
-            AsyncStorage.setItem("authToken", token);
-            navigation.navigate("Home");
-          });
-        };
+        axios.post(`${API_BASE_URL}/login`, user).then((response) => {
+          const token = response.data.token;
+          console.log('token', token);
+          AsyncStorage.setItem('authToken', token);
+          navigation.navigate(SCREEN_NAMES.HOME_SCREEN);
+        });
+      }
+    };
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.LIGHTPRIMARY, alignItems: "center" }}>
 
